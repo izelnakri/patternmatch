@@ -9,14 +9,7 @@
  *   - dispatch on `typeof` and `instanceof` only — avoid generic `equals`
  */
 
-import type {
-  Infer,
-  MatchContext,
-  MatchFail,
-  MatchResult,
-  Matcher,
-  PathSegment,
-} from './types.ts';
+import type { Infer, MatchContext, MatchFail, MatchResult, Matcher, PathSegment } from './types.ts';
 import { MATCHER_BRAND } from './types.ts';
 
 const OK: MatchResult = Object.freeze({ ok: true });
@@ -87,9 +80,7 @@ export function walk(value: unknown, pattern: unknown, ctx: MatchContext): Match
 
   // 3. null / undefined — strict, never coerced.
   if (pattern === null || pattern === undefined) {
-    return value === pattern
-      ? ok()
-      : fail(ctx, `Expected ${String(pattern)}`, value, pattern);
+    return value === pattern ? ok() : fail(ctx, `Expected ${String(pattern)}`, value, pattern);
   }
 
   const pType = typeof pattern;
@@ -104,9 +95,7 @@ export function walk(value: unknown, pattern: unknown, ctx: MatchContext): Match
 
   // 5. Function as a pattern → reference equality. Use M.when for predicates.
   if (pType === 'function') {
-    return value === pattern
-      ? ok()
-      : fail(ctx, 'Function references differ', value, pattern);
+    return value === pattern ? ok() : fail(ctx, 'Function references differ', value, pattern);
   }
 
   // 6. Date — same instant.

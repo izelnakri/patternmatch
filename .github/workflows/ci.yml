@@ -1,0 +1,113 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # ── Lint ──────────────────────────────────────────────────────────────────────
+  # Surfaces formatting and lint failures fast, independent of the slower
+  # test job.
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: npm ci
+      - run: npm run format
+      - run: npm run lint
+
+  # ── Test ──────────────────────────────────────────────────────────────────────
+  # Runs the full suite (Node + Deno) on Linux, macOS, and Windows. type-match
+  # is platform-agnostic JS, but the matrix catches path / line-ending /
+  # filesystem regressions in tooling and tests.
+  test:
+    name: test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - uses: actions/cache@v5
+        with:
+          path: dist
+          key: dist-${{ hashFiles('src/**', 'tsconfig.json', 'package-lock.json') }}
+          restore-keys: dist-
+      - run: npm ci
+      - run: npm test
+        env:
+          FORCE_COLOR: 0
+
+  # ── Release consumer test ──────────────────────────────────────────────────────
+  # Packs the built artefact and runs the test suite against the tarball on every
+  # supported runtime, catching issues (broken dist/ exports, missing files,
+  # bad Deno conditional, etc.) that only surface when a downstream developer
+  # installs the package. Runs on all three target platforms to catch
+  # OS-specific packaging regressions.
+  release-consumer-test:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [lint, test]
+    name: release-consumer-test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: npm ci
+      - run: bash scripts/test-release.sh
+        shell: bash
+        env:
+          FORCE_COLOR: 0
+
+  # ── GitHub release ─────────────────────────────────────────────────────────────
+  # Intentionally NOT gated on release-consumer-test: by the time this runs,
+  # `make release` has already published to npm, so blocking the GitHub release
+  # on a flaky consumer test causes drift (npm has it, GH doesn't).
+  # release-consumer-test still runs in parallel and surfaces failures in CI;
+  # release-reconcile.yml is the weekly backstop for any other publish failures
+  # (GH API outages, runner death, etc.).
+  github-release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/publish-release
+        with:
+          tag: ${{ github.ref_name }}
+          github_token: ${{ github.token }}
