@@ -94,19 +94,20 @@ export type Pattern<T = unknown> = unknown extends T ? unknown : Matcher<T> | T;
  * `isMatch(value, pattern)`, which acts as a `value is Infer<typeof pattern>`
  * type predicate.
  */
-export type Infer<P> = P extends Matcher<infer T>
-  ? T
-  : P extends RegExp
-    ? string
-    : P extends Date
-      ? Date
-      : P extends readonly [...infer Tup]
-        ? { -readonly [I in keyof Tup]: Infer<Tup[I]> }
-        : P extends ReadonlyArray<infer U>
-          ? Infer<U>[]
-          : // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-            P extends Function
-            ? P
-            : P extends object
-              ? { -readonly [K in keyof P]: Infer<P[K]> }
-              : P;
+export type Infer<P> =
+  P extends Matcher<infer T>
+    ? T
+    : P extends RegExp
+      ? string
+      : P extends Date
+        ? Date
+        : P extends readonly [...infer Tup]
+          ? { -readonly [I in keyof Tup]: Infer<Tup[I]> }
+          : P extends ReadonlyArray<infer U>
+            ? Infer<U>[]
+            : // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+              P extends Function
+              ? P
+              : P extends object
+                ? { -readonly [K in keyof P]: Infer<P[K]> }
+                : P;

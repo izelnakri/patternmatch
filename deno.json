@@ -4,6 +4,9 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "imports": {
+    "type-match": "./src/index.ts"
+  },
   "tasks": {
     "test": "deno test --allow-read test/",
     "bench": "deno bench --allow-read benches/"

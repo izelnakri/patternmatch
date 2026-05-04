@@ -8,13 +8,7 @@
  *   if (isMatch(input, isUser)) { ... }
  */
 
-import type {
-  Infer,
-  MatchContext,
-  MatchFail,
-  MatchResult,
-  Matcher,
-} from './types.ts';
+import type { Infer, MatchContext, MatchFail, MatchResult, Matcher } from './types.ts';
 import { MATCHER_BRAND } from './types.ts';
 import { fail, ok, walk } from './walk.ts';
 
@@ -35,15 +29,11 @@ export const never: Matcher<never> = defineMatcher('never', (v, ctx) =>
 );
 
 export const defined: Matcher<NonNullable<unknown>> = defineMatcher('defined', (v, ctx) =>
-  v !== null && v !== undefined
-    ? ok()
-    : fail(ctx, 'Expected non-nullish value', v, 'M.defined'),
+  v !== null && v !== undefined ? ok() : fail(ctx, 'Expected non-nullish value', v, 'M.defined'),
 );
 
 export const nullish: Matcher<null | undefined> = defineMatcher('nullish', (v, ctx) =>
-  v === null || v === undefined
-    ? ok()
-    : fail(ctx, 'Expected null or undefined', v, 'M.nullish'),
+  v === null || v === undefined ? ok() : fail(ctx, 'Expected null or undefined', v, 'M.nullish'),
 );
 
 // ─── Primitive type predicates ──────────────────────────────────────────────
@@ -91,30 +81,22 @@ export const date: Matcher<Date> = defineMatcher('date', (v, ctx) =>
 
 export const gt = (n: number): Matcher<number> =>
   defineMatcher(`gt(${n})`, (v, ctx) =>
-    typeof v === 'number' && v > n
-      ? ok()
-      : fail(ctx, `Expected number > ${n}`, v, `M.gt(${n})`),
+    typeof v === 'number' && v > n ? ok() : fail(ctx, `Expected number > ${n}`, v, `M.gt(${n})`),
   );
 
 export const gte = (n: number): Matcher<number> =>
   defineMatcher(`gte(${n})`, (v, ctx) =>
-    typeof v === 'number' && v >= n
-      ? ok()
-      : fail(ctx, `Expected number >= ${n}`, v, `M.gte(${n})`),
+    typeof v === 'number' && v >= n ? ok() : fail(ctx, `Expected number >= ${n}`, v, `M.gte(${n})`),
   );
 
 export const lt = (n: number): Matcher<number> =>
   defineMatcher(`lt(${n})`, (v, ctx) =>
-    typeof v === 'number' && v < n
-      ? ok()
-      : fail(ctx, `Expected number < ${n}`, v, `M.lt(${n})`),
+    typeof v === 'number' && v < n ? ok() : fail(ctx, `Expected number < ${n}`, v, `M.lt(${n})`),
   );
 
 export const lte = (n: number): Matcher<number> =>
   defineMatcher(`lte(${n})`, (v, ctx) =>
-    typeof v === 'number' && v <= n
-      ? ok()
-      : fail(ctx, `Expected number <= ${n}`, v, `M.lte(${n})`),
+    typeof v === 'number' && v <= n ? ok() : fail(ctx, `Expected number <= ${n}`, v, `M.lte(${n})`),
   );
 
 export const between = (min: number, max: number): Matcher<number> =>
@@ -166,7 +148,9 @@ export const length = (
     }
     const len = (v as { length: number }).length;
     if (typeof spec === 'number') {
-      return len === spec ? ok() : fail(ctx, `Expected .length === ${spec}, got ${len}`, v, `M.${tag}`);
+      return len === spec
+        ? ok()
+        : fail(ctx, `Expected .length === ${spec}, got ${len}`, v, `M.${tag}`);
     }
     if (spec.min !== undefined && len < spec.min) {
       return fail(ctx, `Expected .length >= ${spec.min}, got ${len}`, v, `M.${tag}`);
@@ -205,7 +189,9 @@ export const instanceOf = <C extends abstract new (...a: any) => any>(
 ): Matcher<InstanceType<C>> => {
   const name = Ctor.name || 'AnonymousClass';
   return defineMatcher(`instanceOf(${name})`, (v, ctx) =>
-    v instanceof Ctor ? ok() : fail(ctx, `Expected instance of ${name}`, v, `M.instanceOf(${name})`),
+    v instanceof Ctor
+      ? ok()
+      : fail(ctx, `Expected instance of ${name}`, v, `M.instanceOf(${name})`),
   );
 };
 
@@ -280,12 +266,16 @@ export function mapOf<KP, VP>(
     if (!(value instanceof Map)) return fail(ctx, 'Expected Map', value, 'M.mapOf(...)');
     let i = 0;
     for (const [k, v] of value) {
-      const keySeg = typeof k === 'string' || typeof k === 'number' || typeof k === 'symbol'
-        ? k
-        : `<entry ${i}>`;
+      const keySeg =
+        typeof k === 'string' || typeof k === 'number' || typeof k === 'symbol'
+          ? k
+          : `<entry ${i}>`;
       ctx.path.push(keySeg);
       const kr = walk(k, keyPattern, ctx);
-      if (!kr.ok) { ctx.path.pop(); return kr; }
+      if (!kr.ok) {
+        ctx.path.pop();
+        return kr;
+      }
       const vr = walk(v, valuePattern, ctx);
       ctx.path.pop();
       if (!vr.ok) return vr;
@@ -307,7 +297,10 @@ export function recordOf<KP, VP>(
     for (const [k, v] of Object.entries(value as object)) {
       ctx.path.push(k);
       const kr = walk(k, keyPattern, ctx);
-      if (!kr.ok) { ctx.path.pop(); return kr; }
+      if (!kr.ok) {
+        ctx.path.pop();
+        return kr;
+      }
       const vr = walk(v, valuePattern, ctx);
       ctx.path.pop();
       if (!vr.ok) return vr;
