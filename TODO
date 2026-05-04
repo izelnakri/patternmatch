@@ -1,0 +1,53 @@
+  ┌──────────────────────┬────────────────────────────────────────────────────────────────────┬─────────────────────────────────────────────────────────────────────────────────┐
+  │       Library        │                   What it actually optimizes for                   │                   Why it's not what you want for assert.match                   │
+  ├──────────────────────┼────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────┤
+  │ ts-pattern           │ Exhaustive control flow on discriminated unions; killer type       │ Builder API (match().with().exhaustive()), strict-by-default objects, no diff   │
+  │                      │ inference                                                          │ output                                                                          │
+  ├──────────────────────┼────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────┤
+  │ match-iz             │ TC39-proposal mimic, tiny                                          │ Weak TS inference, no diff, no path-aware errors                                │
+  ├──────────────────────┼────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────┤
+  │ @core/match (jsr)    │ Structured binding + validation in one pass                        │ Returns bound values OR undefined; no failure context                           │
+  ├──────────────────────┼────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────┤
+  │ Effect/Match         │ Tagged unions inside Effect's pipe ecosystem                       │ Pulls in Effect; control-flow API, not assertion API                            │
+  ├──────────────────────┼────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────┤
+  │ lodash-match-pattern │ Resilient JSON API testing with a .../^^^/=== DSL                  │ String DSL, lodash dependency, the library's own README warns of "code smell"   │
+  ├──────────────────────┼────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────┤
+  │ chai-match-pattern   │ Wraps the above for chai                                           │ Inherits all the above issues + chai lock-in                                    │
+  ├──────────────────────┼────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────┤
+  │ assert-match         │ Throws on mismatch                                                 │ No structured result for custom assertion adapters                              │
+  ├──────────────────────┼────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────┤
+  │ jest matchers        │ expect.objectContaining, arrayContaining, any, stringMatching      │ Coupled to jest's expect engine; can't reuse outside tests                      │
+  └──────────────────────┴────────────────────────────────────────────────────────────────────┴─────────────────────────────────────────────────────────────────────────────────┘
+
+  Conclusion: none of them are designed for the contract a custom assert.match(value, pattern) needs — return a structured result with path/actual/expected/reason so the test
+  runner can render its own diff. That's the gap type-match fills.
+
+  Design choices baked into this boilerplate
+
+  - match() returns MatchResult, not throws — qunitx's assertion layer wraps it into pushResult, but the library itself stays test-runner-agnostic.
+  - Plain objects are partial-match by default; arrays are strict tuples. Matches what testers actually want and what jest established with toMatchObject.
+  - isMatch(value, pattern) is typed value is Infer<typeof pattern> — doubles as a runtime type guard. No equivalent in match-iz; ts-pattern requires isMatching and is harder to
+  inline.
+  - MATCHER_BRAND is a Symbol.for(...) protocol — third-party validators (Zod, Valibot, Standard Schema) can implement it without a wrapper.
+  - Cycle-safe via co-recursive (value, pattern) memoization — most pattern libs aren't.
+  - Path stack mutated in place; only sliced on failure — keeps the hot path allocation-free.
+
+  What's marked as roadmap (not yet shipped)
+
+  M.bind/M.ref (cross-field equality), M.compile (closure-based pattern compiler), async matchers, error-object matcher, Standard Schema interop, LCS-based multi-line diff. The
+  README documents these so you can grow the library iteratively.
+
+  Next step for qunitx
+
+  Once this lands, assert.match in qunitx/shims/shared/assert.ts can be ~10 lines: call match(actual, pattern), on !ok throw Assert.AssertionError with result.actual,
+  result.expected, and formatMatchFailure(result) as the message.
+
+  Sources:
+  - ts-pattern
+  - match-iz
+  - @core/match (jsr)
+  - Effect/Match
+  - lodash-match-pattern
+  - chai-match-pattern
+  - assert-match
+  - TC39 proposal-pattern-matching

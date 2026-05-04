@@ -1,0 +1,82 @@
+{
+  "name": "type-match",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Pattern matching for JavaScript and TypeScript with rich diff output, designed for assertions and runtime guards. Universal — runs in Node.js, Deno, and the browser.",
+  "author": "Izel Nakri",
+  "license": "MIT",
+  "keywords": [
+    "pattern matching",
+    "structural matching",
+    "deep match",
+    "partial match",
+    "type-match",
+    "match",
+    "matcher",
+    "matchers",
+    "assert",
+    "assertion",
+    "assertions",
+    "test",
+    "testing",
+    "qunit",
+    "qunitx",
+    "schema",
+    "validation",
+    "validator",
+    "predicate",
+    "type guard",
+    "type narrowing",
+    "exhaustive",
+    "ts-pattern alternative",
+    "match-iz alternative",
+    "diff",
+    "object containing",
+    "deep equal",
+    "node",
+    "deno",
+    "browser",
+    "universal"
+  ],
+  "engines": {
+    "node": ">=22.0.0",
+    "deno": ">=2.0.0"
+  },
+  "files": [
+    "dist/",
+    "src/"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "deno": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/izelnakri/type-match.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:cold": "rm -rf dist && tsc",
+    "format": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\" \"package.json\"",
+    "format:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"package.json\"",
+    "lint": "deno lint src/ test/",
+    "prepare": "npm run build",
+    "test": "npm run test:node && npm run test:deno",
+    "test:node": "node --test test/match-test.ts",
+    "test:deno": "deno test --allow-read test/match-test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "prettier": "^3.8.1",
+    "qunitx": "^1.2.16",
+    "typescript": "^5.9.2"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "arrowParens": "always"
+  }
+}

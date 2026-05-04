@@ -1,0 +1,19 @@
+{
+  "name": "@izelnakri/type-match",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "tasks": {
+    "test": "deno test --allow-read test/",
+    "bench": "deno bench --allow-read benches/"
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["no-import-prefix"]
+    }
+  },
+  "compilerOptions": {
+    "strict": true
+  }
+}
