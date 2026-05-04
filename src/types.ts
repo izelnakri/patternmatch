@@ -1,5 +1,5 @@
 /**
- * Public type surface for type-match.
+ * Public type surface for patternmatch.
  *
  * The runtime is intentionally tiny — almost everything here is type-only,
  * with the single exception of `MATCHER_BRAND`, the well-known symbol used
@@ -12,7 +12,7 @@
  * a matcher by `walk`. This is the public protocol — third-party libraries
  * (Zod, Valibot, Effect, …) can implement it to interop without a wrapper.
  */
-export const MATCHER_BRAND: unique symbol = Symbol.for('type-match.matcher');
+export const MATCHER_BRAND: unique symbol = Symbol.for('patternmatch.matcher');
 
 /** A path segment produced when descending into nested values. */
 export type PathSegment = string | number | symbol;

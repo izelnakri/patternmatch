@@ -32,7 +32,7 @@ jobs:
       - run: npm run lint
 
   # ── Test ──────────────────────────────────────────────────────────────────────
-  # Runs the full suite (Node + Deno) on Linux, macOS, and Windows. type-match
+  # Runs the full suite (Node + Deno) on Linux, macOS, and Windows. patternmatch
   # is platform-agnostic JS, but the matrix catches path / line-ending /
   # filesystem regressions in tooling and tests.
   test:

@@ -1,5 +1,5 @@
 import { module, test } from 'qunitx';
-import { formatMatchFailure, isMatch, M, match } from 'type-match';
+import { formatMatchFailure, isMatch, M, match } from '@izelnakri/patternmatch';
 
 module('match: primitives', () => {
   test('strict equality of strings', (assert) => {

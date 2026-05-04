@@ -42,9 +42,9 @@ release:
 	$(MAKE) test; \
 	npm run test:release; \
 	npm version $(LEVEL) --no-git-tag-version; \
-	git-cliff --tag "v$$(node -p 'require(\"./package.json\").version')" --output CHANGELOG.md; \
+	git-cliff --tag "v$$(node -p 'require("./package.json").version')" --output CHANGELOG.md; \
 	git add package.json package-lock.json CHANGELOG.md; \
-	git commit -m "Release $$(node -p 'require(\"./package.json\").version')"; \
-	git tag "v$$(node -p 'require(\"./package.json\").version')"; \
+	git commit -m "Release $$(node -p 'require("./package.json").version')"; \
+	git tag "v$$(node -p 'require("./package.json").version')"; \
 	git push; git push --tags; \
 	npm publish --access public

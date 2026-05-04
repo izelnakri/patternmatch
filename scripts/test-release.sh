@@ -2,7 +2,7 @@
 # Pack the current build into a tarball, install it into a throwaway consumer
 # directory alongside qunitx, and run the existing test suite against the
 # installed package on every supported runtime. Intentionally different from
-# `make test`: here `type-match` resolves to the packed dist output, catching
+# `make test`: here `@izelnakri/patternmatch` resolves to the packed dist output, catching
 # build / packaging regressions that source tests cannot see — wrong exports
 # map, missing files, broken Deno conditional, etc.
 #
@@ -35,8 +35,8 @@ node --test test/match-test.ts
 
 # ── Deno ────────────────────────────────────────────────────────────────────
 # Deno 2 auto-enables node_modules resolution from package.json deps, so
-# `from 'type-match'` resolves through the deno conditional export
-# (./src/index.ts) inside the installed node_modules/type-match/.
+# `from '@izelnakri/patternmatch'` resolves through the package.json exports
+# default condition inside the installed node_modules/@izelnakri/patternmatch/.
 echo "test-release: deno"
 deno test --allow-read test/match-test.ts
 

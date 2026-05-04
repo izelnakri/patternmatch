@@ -1,11 +1,11 @@
 {
-  "name": "@izelnakri/type-match",
+  "name": "@izelnakri/patternmatch",
   "version": "0.1.0",
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-    "type-match": "./src/index.ts"
+    "@izelnakri/patternmatch": "./src/index.ts"
   },
   "tasks": {
     "test": "deno test --allow-read test/",

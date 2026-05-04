@@ -1,9 +1,9 @@
-# type-match
+# patternmatch
 
 > Pattern matching for JavaScript and TypeScript — designed for assertions and runtime guards. Universal: Node.js, Deno, browsers. Zero dependencies.
 
 ```ts
-import { match, isMatch, M, formatMatchFailure } from 'type-match';
+import { match, isMatch, M, formatMatchFailure } from '@izelnakri/patternmatch';
 
 const result = match(user, {
   id: M.string,
@@ -23,7 +23,7 @@ if (!result.ok) {
 
 ## Status
 
-Alpha. API will change before 1.0. The intended consumer is [`qunitx`](https://github.com/izelnakri/qunitx) for its `assert.match` API, but `type-match` is a standalone library with no test-runner dependencies.
+Alpha. API will change before 1.0. The intended consumer is [`qunitx`](https://github.com/izelnakri/qunitx) for its `assert.match` API, but `patternmatch` is a standalone library with no test-runner dependencies.
 
 ## Why another pattern-matching library?
 
@@ -38,26 +38,26 @@ The TypeScript ecosystem already has several pattern-matching tools, but each is
 | [`lodash-match-pattern`](https://github.com/mjhm/lodash-match-pattern) | JSON API testing                    | `null` or error string                               | strict, opt-out via `...` DSL | string  | medium |
 | [`chai-match-pattern`](https://www.chaijs.com/plugins/chai-match-pattern/) | Wraps lodash-match-pattern for chai | chai assertion                                       | inherited                | string  | medium |
 | [`assert-match`](https://www.npmjs.com/package/assert-match)           | Asserting against matcher trees     | throws                                              | strict                   | basic   | tiny   |
-| **`type-match`**                                                       | **Assertions + runtime guards**     | **`MatchResult` (`{ ok, path, expected, actual, reason }`)** | **partial-by-default**   | **structured + path** | **target ≤ 4 kB** |
+| **`patternmatch`**                                                     | **Assertions + runtime guards**     | **`MatchResult` (`{ ok, path, expected, actual, reason }`)** | **partial-by-default**   | **structured + path** | **target ≤ 4 kB** |
 
-`type-match` is an *assertion-first* library. The control-flow-first design of `ts-pattern` is intentionally different — it solves a different problem (exhaustive case analysis on discriminated unions). For test assertions you want:
+`patternmatch` is an *assertion-first* library. The control-flow-first design of `ts-pattern` is intentionally different — it solves a different problem (exhaustive case analysis on discriminated unions). For test assertions you want:
 
 1. Partial-by-default object matching (frameworks add fields you don't care about).
 2. Path-aware error reporting (`at users[0].email` is the difference between a 5-second debug and a 5-minute debug).
 3. A pattern-as-data design where matchers are values you can compose, store, and pass around — no builder API.
 4. A predicate form (`isMatch(value, pattern): value is Infer<typeof pattern>`) that doubles as a TypeScript type guard.
 
-If you're building a switch-style state machine, reach for `ts-pattern`. If you're asserting that an arbitrary in-memory object satisfies an ad-hoc shape (testing, validating webhook payloads, gating runtime data), reach for `type-match`.
+If you're building a switch-style state machine, reach for `ts-pattern`. If you're asserting that an arbitrary in-memory object satisfies an ad-hoc shape (testing, validating webhook payloads, gating runtime data), reach for `patternmatch`.
 
 ## Quick start
 
 ```bash
-npm install type-match
-# or: deno add jsr:@izelnakri/type-match
+npm install @izelnakri/patternmatch
+# or: deno add jsr:@izelnakri/patternmatch
 ```
 
 ```ts
-import { match, isMatch, M } from 'type-match';
+import { match, isMatch, M } from '@izelnakri/patternmatch';
 
 // Boolean form — also a type predicate.
 isMatch(value, { id: M.string, email: /@/ });

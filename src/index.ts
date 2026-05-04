@@ -1,7 +1,7 @@
 /**
- * type-match — pattern matching for JavaScript and TypeScript.
+ * patternmatch — pattern matching for JavaScript and TypeScript.
  *
- *   import { match, isMatch, M, formatMatchFailure } from 'type-match';
+ *   import { match, isMatch, M, formatMatchFailure } from '@izelnakri/patternmatch';
  *
  *   const result = match(user, {
  *     id: M.string,

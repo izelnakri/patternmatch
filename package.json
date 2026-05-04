@@ -1,5 +1,5 @@
 {
-  "name": "type-match",
+  "name": "@izelnakri/patternmatch",
   "type": "module",
   "version": "0.1.0",
   "description": "Pattern matching for JavaScript and TypeScript with rich diff output, designed for assertions and runtime guards. Universal — runs in Node.js, Deno, and the browser.",
@@ -10,7 +10,7 @@
     "structural matching",
     "deep match",
     "partial match",
-    "type-match",
+    "patternmatch",
     "match",
     "matcher",
     "matchers",
