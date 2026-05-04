@@ -1,7 +1,7 @@
 {
   "name": "@izelnakri/patternmatch",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Pattern matching for JavaScript and TypeScript with rich diff output, designed for assertions and runtime guards. Universal — runs in Node.js, Deno, and the browser.",
   "author": "Izel Nakri",
   "license": "MIT",
