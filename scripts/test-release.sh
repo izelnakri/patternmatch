@@ -14,10 +14,12 @@ ROOT=$(cd "$(dirname "$0")/.." && pwd)
 CONSUMER=$(mktemp -d)
 trap 'rm -rf "$CONSUMER"' EXIT
 
-QUNITX_VERSION=$(node -p "require('$ROOT/package.json').devDependencies.qunitx")
-
 # ── Pack ────────────────────────────────────────────────────────────────────
+# cd before reading package.json so `require('./package.json')` works on
+# Windows Git Bash, where `$ROOT` is a Unix-style path (/d/a/...) that Node
+# on Windows can't resolve.
 cd "$ROOT"
+QUNITX_VERSION=$(node -p "require('./package.json').devDependencies.qunitx")
 npm pack --pack-destination "$CONSUMER" --quiet 2>/dev/null
 TARBALL=$(ls "$CONSUMER"/*.tgz | head -1)
 
