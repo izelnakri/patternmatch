@@ -54,7 +54,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/izelnakri/type-match.git"
+    "url": "git+https://github.com/izelnakri/patternmatch.git"
   },
   "scripts": {
     "build": "tsc",
