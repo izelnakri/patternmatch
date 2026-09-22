@@ -73,7 +73,7 @@
     "@types/node": "^26.0.0",
     "prettier": "^3.8.1",
     "qunitx": "^1.2.16",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "prettier": {
     "printWidth": 100,
